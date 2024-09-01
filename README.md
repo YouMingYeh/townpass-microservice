@@ -1,1 +1,7 @@
-go to `server` directory and follow the instructions in the README.md file.
+### Server the Microservice
+
+```
+pnpm i
+cd apps/app
+pnpm dev
+```
