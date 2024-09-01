@@ -4,6 +4,7 @@ import { SplashContent } from '../../modules/splash/components/SplashContent';
 import { SplashImage } from '../../components/other/splash-image';
 import CallToAction from '../../modules/splash/components/CallToAction';
 import { Suspense } from 'react';
+import { Button } from 'ui';
 
 const Page: NextPage = () => {
   return (

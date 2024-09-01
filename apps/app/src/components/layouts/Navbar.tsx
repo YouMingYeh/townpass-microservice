@@ -26,7 +26,7 @@ export const NavBar: FC<NavbarProps> = () => {
   };
 
   return (
-    <nav className='border-border text-primary dark:text-foreground container border-b md:py-2'>
+    <nav className='border-border dark:text-foreground container border-b md:py-2'>
       <div className='mx-auto flex max-w-6xl items-center justify-between'>
         <div className='flex items-center justify-center gap-1'>
           <a href='/'>

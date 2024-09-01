@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Merriweather } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import 'ui/styles/globals.css';
 import React from 'react';
 import { Toaster } from 'ui';
@@ -8,7 +8,7 @@ import Head from 'next/head';
 import Providers from './providers';
 import Pwa from '../components/layouts/Pwa';
 
-const inter = Merriweather({ weight: ['400', '700'], subsets: ['latin'] });
+const inter = Roboto({ weight: ['400', '700'], subsets: ['latin'] });
 
 // TODO: update the site metadata
 export const metadata: Metadata = {

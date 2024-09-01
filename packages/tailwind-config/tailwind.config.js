@@ -46,18 +46,12 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        coffee: {
-          DEFAULT: 'var(--coffee-500)',
-          50: 'var(--coffee-50)',
-          100: 'var(--coffee-100)',
-          200: 'var(--coffee-200)',
-          300: 'var(--coffee-300)',
-          400: 'var(--coffee-400)',
-          500: 'var(--coffee-500)',
-          600: 'var(--coffee-600)',
-          700: 'var(--coffee-700)',
-          800: 'var(--coffee-800)',
-          900: 'var(--coffee-900)',
+        green: {
+          DEFAULT: 'hsl(var(--green))',
+        },
+        orange: {
+          DEFAULT: 'hsl(var(--orange))',
+          foreground: 'hsl(var(--orange-foreground))',
         },
       },
       borderRadius: {
