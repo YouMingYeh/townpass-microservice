@@ -1,0 +1,29 @@
+{
+  "id": "/",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "/icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "/icon512_rounded.png",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "zh-TW",
+  "name": "TownPass",
+  "short_name": "TownPass",
+  "scope": "/",
+  "description": "是一個專為建立人脈、尋找學習導師、合作夥伴的平台，透過平台配對，讓你輕鬆找到學習導師與合作夥伴，設定目標、規劃未來、分享資源、一起成長！",
+  "categories": ["social"],
+  "start_url": "/"
+}
