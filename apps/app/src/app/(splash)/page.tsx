@@ -24,6 +24,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
+  Badge,
 } from 'ui';
 
 interface Location {
@@ -95,6 +96,7 @@ const MapComponent = ({
           lng: position.coords.longitude,
         });
         setLocationError(null);
+        console.log(position.coords.latitude, position.coords.longitude);
       },
       error => {
         setLocationError('Error getting location: ' + error.message);
@@ -262,6 +264,7 @@ export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [newReportContent, setNewReportContent] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [currentLocation, setCurrentLocation] = useState<{
     lat: number;
     lng: number;
@@ -320,6 +323,7 @@ export default function Home() {
         timestamp: Math.floor(Date.now() / 1000),
         image: imageFile ? URL.createObjectURL(imageFile) : null,
         location: currentLocation,
+        tags: selectedTags,
       };
 
       fetch(`${API_BASE_URL}/report/`, {
@@ -335,9 +339,18 @@ export default function Home() {
           setNewReportContent('');
           setImageFile(null);
           setIsFormOpen(false);
+          setSelectedTags([]);
         })
         .catch(error => console.error('Error submitting report:', error));
     }
+  };
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prevTags =>
+      prevTags.includes(tag)
+        ? prevTags.filter(t => t !== tag)
+        : [...prevTags, tag],
+    );
   };
 
   const getCommentsForReport = (reportId: string) =>
@@ -417,6 +430,27 @@ export default function Home() {
               <strong>位置：</strong> ({selectedReport.location?.lat},{' '}
               {selectedReport.location?.lng})
             </p>
+            <div
+              style={{
+                marginTop: '10px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+              }}
+            >
+              {selectedReport.tags && selectedReport.tags.length > 0 ? (
+                selectedReport.tags.map((tag, index) => (
+                  <Badge
+                    key={index}
+                    style={{ backgroundColor: '#5AB4C5', color: '#fff' }}
+                  >
+                    {tag}
+                  </Badge>
+                ))
+              ) : (
+                <p>沒有標籤</p>
+              )}
+            </div>
             <h3>留言區</h3>
             {getCommentsForReport(selectedReport.id).map((comment, index) => (
               <div key={index}>
@@ -486,7 +520,7 @@ export default function Home() {
         <div
           style={{
             position: 'fixed',
-            top: '60%',
+            top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             backgroundColor: '#fff',
@@ -494,10 +528,10 @@ export default function Home() {
             borderRadius: '10px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
             width: '300px',
-            height: '400px',
+            height: '550px',
           }}
         >
-          <h3 className='mb-4'>新增報告</h3>
+          <h1 className='mb-4'>新增報告</h1>
           <Textarea
             placeholder='輸入報告內容'
             value={newReportContent}
@@ -506,6 +540,35 @@ export default function Home() {
             style={{ height: '200px' }}
           />
           <Input type='file' onChange={handleImageUpload} className='mb-4' />
+          <p className='mb-4'>標籤</p>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              marginBottom: '32px',
+            }}
+          >
+            {tagsList.map(tag => (
+              <Button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                style={{
+                  backgroundColor: selectedTags.includes(tag)
+                    ? '#5AB4C5'
+                    : '#e5e5e5',
+                  color: selectedTags.includes(tag) ? '#fff' : '#000',
+                  borderRadius: '5px',
+                  padding: '5px 10px',
+                  flex: '0 0 calc(25% - 10px)',
+                  textAlign: 'center',
+                }}
+              >
+                {tag}
+              </Button>
+            ))}
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Button onClick={handleCreateReport}>提交</Button>
             <Button
