@@ -6,8 +6,20 @@ import { MapComponent } from '../../components/MapComponent';
 import { ReportDetails } from '../../components/ReportDetails';
 import { ReportForm } from '../../components/ReportForm';
 import { Report, Comment } from '../type';
+import { init } from '@instantdb/react/dist/module/init';
 
 const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
+
+type UserSchema = {
+  user: { name: string, lat: number, lng: number };
+}
+
+type RoomSchema = {
+  chat: {
+    presence: { name: string, lat: number, lng: number };
+  };
+}
+
 
 export default function Home() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
@@ -25,6 +37,32 @@ export default function Home() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [userinfo, setUserinfo] = useState<any | null>(null);
+
+  const APP_ID = '4bcf8bb9-ffea-44d0-a02d-23549cf12d95'
+  const db = init<UserSchema, RoomSchema>({ appId: APP_ID });
+
+  const instantRoom = db.room('chat', 'main');
+  const randomId = Math.random().toString(36).slice(2, 6);
+  const [instantUser, setInstantUser] = useState<any | null>({
+    name: userinfo?.username || '匿名',
+    lat: 122,
+    lng: 50,
+  });
+
+  const { user: localPresence, peers, publishPresence } = instantRoom.usePresence();
+
+
+  useEffect(() => {
+    setInterval(() => {
+      publishPresence(instantUser);
+      toast({
+        title: 'New user joined',
+        description: JSON.stringify(peers),
+      })
+    }
+    , 5000);
+  }, []);
+
 
   const handleSelectReport = (report: Report) => {
     setSelectedReport(report);
