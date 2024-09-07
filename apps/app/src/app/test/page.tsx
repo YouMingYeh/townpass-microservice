@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useEffect, useState } from 'react';
 import { Separator, useToast } from 'ui';
 
@@ -26,7 +26,6 @@ export default function Page() {
   }, []);
   useEffect(() => {
     const updateLocation = setInterval(() => {
-      
       // @ts-ignore
       if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
         // @ts-ignore
