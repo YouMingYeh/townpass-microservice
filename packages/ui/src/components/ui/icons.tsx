@@ -58,6 +58,7 @@ import {
   ScanSearch,
   LibraryBig,
   BellOffIcon,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { forwardRef } from 'react';
 
@@ -390,6 +391,7 @@ export const Icons = {
   Quote,
   LogOut,
   MessageCircle,
+  SlidersHorizontal
 };
 
 export function nameToIcon(name: string) {

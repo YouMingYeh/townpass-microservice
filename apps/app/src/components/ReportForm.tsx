@@ -79,7 +79,7 @@ export const ReportForm = ({
         <DialogHeader>
           <DialogTitle>新增報告</DialogTitle>
           <DialogDescription>
-            請輸入報告內容，也可以選擇相關圖片
+            告訴大家你遇到的問題，讓附近的人一起幫忙解決吧！
           </DialogDescription>
         </DialogHeader>
         <Textarea

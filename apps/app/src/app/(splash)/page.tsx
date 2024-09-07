@@ -6,6 +6,7 @@ import { MapComponent } from '../../components/MapComponent';
 import { ReportDetails } from '../../components/ReportDetails';
 import { ReportForm } from '../../components/ReportForm';
 import { Report, Comment } from '../type';
+import { useSearchParams } from 'next/navigation';
 
 const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
 
@@ -58,6 +59,8 @@ export default function Home() {
       }
     }
 
+    console.log('selectedReport:', selectedReport);
+
     const newCommentData = {
       report_id: selectedReport?.id,
       username: 'Current User',
@@ -66,7 +69,9 @@ export default function Home() {
       image: imageUrl,
     };
 
-    fetch(`${API_BASE_URL}/report/comment/`, {
+    console.log('newCommentData:', newCommentData);
+
+    fetch(`${API_BASE_URL}/report/comment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +108,7 @@ export default function Home() {
 
     if (content && currentLocation) {
       const newReportData = {
-        username: userinfo?.username || 'Current User',
+        username: userinfo?.username || '匿名',
         content,
         timestamp: Math.floor(Date.now() / 1000),
         image: imageUrl,
@@ -230,7 +235,10 @@ export default function Home() {
       .then(
         res => res.json() as Promise<{ report: Report; distance: number }[]>,
       )
-      .then(data => setNearbyReports(data.map(d => d.report)))
+      .then(data => {
+        setNearbyReports(data.map(d => d.report));
+        console.log('Nearby reports:', data);
+      })
       .catch(error => console.error('Error fetching nearby reports:', error));
   }, [currentLocation]);
 

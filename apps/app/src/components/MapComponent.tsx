@@ -15,6 +15,8 @@ import {
   DrawerFooter,
   DrawerClose,
   Button,
+  Icons,
+  buttonVariants,
 } from 'ui';
 import { Report } from '../app/type';
 import { useToast } from 'ui';
@@ -94,7 +96,9 @@ export const MapComponent = ({
             zIndex: 1000,
           }}
         >
-          篩選
+          <div className={buttonVariants()}>
+            <Icons.SlidersHorizontal />
+          </div>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -180,11 +184,19 @@ export const MapComponent = ({
             onCloseClick={() => setSelectedReport(null)}
           >
             <div>
-              <h2>{selectedReport.username}</h2>
-              <p>{selectedReport.content || 'No content provided'}</p>
-              <button onClick={() => onSelectReport(selectedReport)}>
-                查看詳細資訊
-              </button>
+              <h2 className='font-bold mb-2'>{selectedReport.username}</h2>
+              <p className='mb-2'>{selectedReport.content || '沒有內文'}</p>
+              <p className='mb-2'>{selectedReport.location?.address || '沒有地址'}</p>
+              {selectedReport.image && (
+                <img
+                  src={selectedReport.image}
+                  alt='Report'
+                  style={{ width: '100px' }}
+                />
+              )}
+              <Button onClick={() => onSelectReport(selectedReport)}>
+                查看詳細資訊 <Icons.ChevronRight />
+              </Button>
             </div>
           </InfoWindow>
         )}

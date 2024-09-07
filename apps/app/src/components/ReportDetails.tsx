@@ -25,7 +25,7 @@ export const ReportDetails = ({
   //   console.log("report: ", reports)
   return (
     <div style={{ padding: '20px' }}>
-      <h2>報告詳細資訊</h2>
+      <h2 className='font-bold text-2xl'>報告詳細資訊</h2>
       <p>
         <strong>使用者：</strong> {selectedReport.username}
       </p>
@@ -40,8 +40,8 @@ export const ReportDetails = ({
         />
       )}
       <p>
-        <strong>位置：</strong> ({selectedReport.location?.lat},{' '}
-        {selectedReport.location?.lng})
+        <strong>地址：</strong>
+        {selectedReport.location?.address || '沒有地址'}
       </p>
       <div
         style={{
