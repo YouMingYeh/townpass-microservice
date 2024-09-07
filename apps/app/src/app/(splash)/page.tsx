@@ -272,7 +272,7 @@ export default function Home() {
     setSelectedReport(report);
     setActiveTab('details');
 
-    fetch(`${API_BASE_URL}/report/comments/${report.id}`, {
+    fetch(`${API_BASE_URL}/report/comments/${report.id}/`, {
       mode: 'no-cors',
     })
       .then(res => res.json())
@@ -295,7 +295,7 @@ export default function Home() {
       image: imageFile ? URL.createObjectURL(imageFile) : null,
     };
 
-      fetch(`${API_BASE_URL}/report/comment`, {
+      fetch(`${API_BASE_URL}/report/comment/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -323,7 +323,7 @@ export default function Home() {
         location: currentLocation,
       };
 
-      fetch(`${API_BASE_URL}/report`, {
+      fetch(`${API_BASE_URL}/report/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
