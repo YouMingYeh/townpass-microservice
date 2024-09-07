@@ -86,6 +86,24 @@ const MapComponent = ({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
 
+  const [userInfo, setUserInfo] = useState({
+    id: '',
+    account: '',
+    username: '',
+    realName: '',
+    idNumber: '',
+    email: '',
+    phoneNumber: '',
+    birthday: '',
+    memberType: '',
+    verifyLevel: '',
+    addressList: [],
+    residentAddress: '',
+    citizen: false,
+    nativePeople: false,
+    cityInternetUid: '',
+  });
+
   const { toast } = useToast();
   const toggleTag = (tag: string) => {
     setSelectedTags(prevTags =>
@@ -118,13 +136,41 @@ const MapComponent = ({
   useEffect(() => {
     // @ts-ignore
     if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
+      toast({
+        title: 'Flutter Object',
+        description: 'Flutter Object is available',
+      });
       // @ts-ignore
       window.flutterObject.onmessage = event => {
-        setCurrentLocation({
-          lat: Number(JSON.parse(event.data).data.lat),
-          lng: Number(JSON.parse(event.data).data.lng),
-        });
+        const data = JSON.parse(event.data);
+        if (data.name === 'location') {
+          setCurrentLocation({
+            lat: Number(data.data.latitude),
+            lng: Number(data.data.longitude),
+          });
+          toast({
+            title: '位置資訊',
+            description: '位置資訊已獲取: ' + JSON.stringify(data.data),
+          });
+        }
+        if (data.name === 'userinfo') {
+          toast({
+            title: '使用者資訊',
+            description: '使用者資訊已獲取: ' + data.data.id,
+          });
+          setUserInfo(data.data);
+        }
       };
+    }
+  }, []);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
+      // @ts-ignore
+      window.flutterObject.postMessage(
+        JSON.stringify({ name: 'userinfo', data: 'null' }),
+      );
     }
   }, []);
 
@@ -307,7 +353,7 @@ export default function Home() {
       image: imageFile ? URL.createObjectURL(imageFile) : null,
     };
 
-      fetch(`${API_BASE_URL}/report/comment/`, {
+    fetch(`${API_BASE_URL}/report/comment/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
