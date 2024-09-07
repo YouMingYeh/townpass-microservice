@@ -56,7 +56,6 @@ export const MapComponent = ({
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
-  const { toast } = useToast();
 
   const handleGetLocation = () => {
     navigator.geolocation.getCurrentPosition(
@@ -172,14 +171,10 @@ export const MapComponent = ({
           <Marker
             position={currentLocation}
             icon={{
-              url: '/marker.png',
+              url: '/me.png',
               scaledSize: new window.google.maps.Size(40, 40),
             }}
             animation={window.google.maps.Animation.DROP}
-            label={{
-              text: '你',
-              className: 'font-bold',
-            }}
           />
         )}
         {filteredReports.map(

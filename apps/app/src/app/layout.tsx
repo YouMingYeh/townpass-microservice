@@ -24,17 +24,17 @@ export const metadata: Metadata = {
     '台北通',
     '競賽',
   ],
-  metadataBase: new URL('https://example.com'),
+  metadataBase: new URL('https://townpass-microservice.vercel.app'),
   openGraph: {
     title: 'TownPass 城市通微服務',
     description:
       'TownPass 城市通微服務是臺北市政府資訊局為持續推動臺北市成為服務型政府，並推廣主辦單位開源及資料開放政策，特以「台北通」為經驗，運用開放原始碼方式，舉辦「2024臺北程式設計節城市通微服務大黑客松」，盼讓數據驅動生活，實踐更好的使用體驗、介面設計，優化市府的服務。',
     type: 'website',
-    url: 'https://example.com',
+    url: 'https://townpass-microservice.vercel.app',
     siteName: 'TownPass 城市通微服務',
     images: [
       {
-        url: 'https://example.com/icon512_rounded.png',
+        url: 'https://townpass-microservice.vercel.app/icon512_rounded.png',
         width: 1200,
         height: 630,
         alt: 'TownPass 城市通微服務',

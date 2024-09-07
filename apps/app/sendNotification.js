@@ -26,8 +26,8 @@ const pushSubscription = {
 const payload = JSON.stringify({
   message: '笨笨奕萱',
   body: '和志同道合的夥伴來場 Coffee Chat！',
-  icon: 'https://example.com/favicon.ico',
-  url: 'https://example.com',
+  icon: 'https://townpass-microservice.vercel.app/favicon.ico',
+  url: 'https://townpass-microservice.vercel.app',
 });
 
 webPush
