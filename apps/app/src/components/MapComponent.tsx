@@ -67,7 +67,7 @@ export const MapComponent = ({
         }),
       error => setLocationError('Error getting location: ' + error.message),
     );
-  }
+  };
 
   useEffect(() => {
     handleGetLocation();
@@ -145,8 +145,13 @@ export const MapComponent = ({
         </DrawerContent>
       </Drawer>
 
-      <Button size='icon' variant='outline' onClick={handleGetLocation} style={{ zIndex: 1000, top: '120px',
-            right: '10px',}} className='absolute rounded-full bg-background'> 
+      <Button
+        size='icon'
+        variant='outline'
+        onClick={handleGetLocation}
+        style={{ zIndex: 1000, top: '120px', right: '10px' }}
+        className='bg-background absolute rounded-full'
+      >
         <Icons.LocateFixed />
       </Button>
 
@@ -193,7 +198,7 @@ export const MapComponent = ({
                 onClick={() => setSelectedReport(report)}
                 animation={window.google.maps.Animation.DROP}
                 label={{
-                  text: report.emoji || '🙂'
+                  text: report.emoji || '🙂',
                 }}
                 title={report.username}
               />
@@ -218,20 +223,19 @@ export const MapComponent = ({
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
+                  marginBottom: '12px',
                 }}
               >
                 {selectedReport.content || '沒有內文'}
               </p>
-              {selectedReport.image && (
-                <img
-                  src={selectedReport.image}
-                  alt='Report'
-                  style={{ width: '100px' }}
-                />
-              )}
-              <Button onClick={() => onSelectReport(selectedReport)}>
-                查看詳細資訊 <Icons.ChevronRight />
-              </Button>
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button
+                  style={{ fontSize: '12px' }}
+                  onClick={() => onSelectReport(selectedReport)}
+                >
+                  查看詳細資訊 <Icons.ChevronRight />
+                </Button>
+              </div>
             </div>
           </InfoWindow>
         )}
