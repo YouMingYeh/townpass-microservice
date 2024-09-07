@@ -19,8 +19,8 @@ import {
 } from 'ui';
 
 interface Location {
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lng: number;
 }
 
 interface Report {
@@ -82,8 +82,8 @@ const MapComponent = ({
       // @ts-ignore
       window.flutterObject.onmessage = event => {
         setCurrentLocation({
-          lat: Number(JSON.parse(event.data).data.latitude),
-          lng: Number(JSON.parse(event.data).data.longitude),
+          lat: Number(JSON.parse(event.data).data.lat),
+          lng: Number(JSON.parse(event.data).data.lng),
         });
       };
     }
@@ -128,25 +128,25 @@ const MapComponent = ({
             }}
           />
         )}
-        {reports.map(
+        {/* {reports.map(
           (report, index) =>
             report.location && (
               <Marker
                 key={index}
                 position={{
-                  lat: report.location.latitude,
-                  lng: report.location.longitude,
+                  lat: report.location.lat,
+                  lng: report.location.lng,
                 }}
                 onClick={() => setSelectedReport(report)}
               />
             ),
-        )}
+        )} */}
 
         {selectedReport && (
           <InfoWindow
             position={{
-              lat: selectedReport.location?.latitude!,
-              lng: selectedReport.location?.longitude!,
+              lat: selectedReport.location?.lat!,
+              lng: selectedReport.location?.lng!,
             }}
             onCloseClick={() => setSelectedReport(null)}
           >
@@ -281,10 +281,10 @@ export default function Home() {
   }, [currentLocation]);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab}>
-      <TabsList variant='underline' width='full'>
-        <TabsTrigger value='map'>地圖</TabsTrigger>
-        <TabsTrigger value='details'>詳細資訊</TabsTrigger>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="map" className="bg-white border-b-white relative flex-1 rounded-none border-b-4 font-normal shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] text-[#5AB4C5] data-[state=active]:font-bold">地圖</TabsTrigger>
+        <TabsTrigger value="details" className="bg-white border-b-white relative flex-1 rounded-none border-b-4 font-normal shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] text-[#5AB4C5] data-[state=active]:font-bold">詳細資訊</TabsTrigger>
       </TabsList>
 
       <TabsContent value='map'>
@@ -314,8 +314,8 @@ export default function Home() {
               />
             )}
             <p>
-              <strong>位置：</strong> ({selectedReport.location?.latitude},{' '}
-              {selectedReport.location?.longitude})
+              <strong>位置：</strong> ({selectedReport.location?.lat},{' '}
+              {selectedReport.location?.lng})
             </p>
             <h3>留言區</h3>
             {getCommentsForReport(selectedReport.id).map((comment, index) => (
