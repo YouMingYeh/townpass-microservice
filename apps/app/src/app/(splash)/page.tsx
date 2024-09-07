@@ -24,6 +24,12 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from 'ui';
 
 interface Location {
@@ -203,10 +209,13 @@ const MapComponent = ({
       <GoogleMap
         center={currentLocation || { lat: 25.033, lng: 121.5654 }}
         zoom={14}
-        mapContainerStyle={{ height: '100vh', width: '100%' }}
+        mapContainerStyle={{ height: '100%', width: '100%' }}
         options={{
           mapTypeControl: false,
           fullscreenControl: false,
+          streetViewControl: false,
+          scaleControl: false,
+          zoomControl: false,
         }}
       >
         {currentLocation && (
@@ -482,22 +491,15 @@ export default function Home() {
         +
       </button>
 
-      {isFormOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '60%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: '#fff',
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-            width: '300px',
-            height: '400px',
-          }}
-        >
-          <h3 className='mb-4'>新增報告</h3>
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>新增報告</DialogTitle>
+            <DialogDescription>
+              請輸入報告內容，也可以選擇相關圖片
+            </DialogDescription>
+          </DialogHeader>
           <Textarea
             placeholder='輸入報告內容'
             value={newReportContent}
@@ -515,8 +517,8 @@ export default function Home() {
               取消
             </Button>
           </div>
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </Tabs>
   );
 }
