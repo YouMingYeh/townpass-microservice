@@ -8,7 +8,8 @@ interface ReportDetailsProps {
   newComment: string;
   setNewComment: (value: string) => void;
   handleCommentSubmit: () => void;
-  uploadImage: (file: File) => Promise<string>;
+  reports: Report[];
+  setSelectReport: (report: Report) => void;
 }
 
 export const ReportDetails = ({
@@ -17,8 +18,11 @@ export const ReportDetails = ({
   newComment,
   setNewComment,
   handleCommentSubmit,
+  reports,
+  setSelectReport,
 }: ReportDetailsProps) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
+  //   console.log("report: ", reports)
   return (
     <div style={{ padding: '20px' }}>
       <h2>報告詳細資訊</h2>
@@ -26,7 +30,7 @@ export const ReportDetails = ({
         <strong>使用者：</strong> {selectedReport.username}
       </p>
       <p>
-        <strong>原因：</strong> {selectedReport.reason || '無原因'}
+        <strong>原因：</strong> {selectedReport.content || '無原因'}
       </p>
       {selectedReport.image && (
         <img
@@ -82,6 +86,41 @@ export const ReportDetails = ({
           className='mb-2'
         />
         <Button onClick={handleCommentSubmit}>送出留言</Button>
+      </div>
+      <div style={{ marginTop: '40px' }}>
+        <h3>附近發生了什麼🤔</h3>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '16px',
+            marginTop: '16px',
+          }}
+        >
+          {reports.slice(0, 10).map((report, index) => (
+            <div
+              key={report.id}
+              style={{
+                border: '1px solid #ccc',
+                padding: '10px',
+                cursor: 'pointer',
+              }}
+              onClick={() => setSelectReport(report)}
+            >
+              <p>
+                <strong>{report.username}</strong>
+              </p>
+              <p>{report.content || '無原因'}</p>
+              {report.image && (
+                <img
+                  src={report.image}
+                  alt='Nearby report'
+                  style={{ width: '100%', height: '100px', objectFit: 'cover' }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

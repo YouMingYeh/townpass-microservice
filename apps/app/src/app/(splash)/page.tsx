@@ -92,7 +92,6 @@ export default function Home() {
     image: File | null;
   }) => {
     let imageUrl = null;
-
     if (image) {
       try {
         imageUrl = await uploadImage(image);
@@ -104,11 +103,14 @@ export default function Home() {
 
     if (content && currentLocation) {
       const newReportData = {
-        username: 'Current User',
+        username: userinfo?.username || 'Current User',
         content,
         timestamp: Math.floor(Date.now() / 1000),
         image: imageUrl,
-        location: currentLocation,
+        location: {
+          lat: currentLocation.lat,
+          lng: currentLocation.lng,
+        },
         tags,
       };
 
@@ -120,16 +122,18 @@ export default function Home() {
         body: JSON.stringify(newReportData),
       })
         .then(res => res.json())
-        .then(reportId => {
-          console.log('Report submitted:', reportId);
+        .then(data => {
+          console.log('Report submitted:', data);
+
           setSelectedReport({
-            id: reportId,
-            username: 'Current User',
-            reason: content,
-            image: imageUrl,
-            location: currentLocation,
-            tags,
+            id: data.report_id,
+            username: data.report.username,
+            content: data.report.content,
+            image: data.report.image,
+            location: data.report.location,
+            tags: data.report.tags,
           });
+
           setNewReportContent('');
           setImageFile(null);
           setIsFormOpen(false);
@@ -139,6 +143,7 @@ export default function Home() {
         .catch(error => console.error('Error submitting report:', error));
     }
   };
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -267,7 +272,8 @@ export default function Home() {
             newComment={newComment}
             setNewComment={setNewComment}
             handleCommentSubmit={handleCommentSubmit}
-            uploadImage={uploadImage}
+            reports={nearbyReports}
+            setSelectReport={setSelectedReport}
           />
         )}
       </TabsContent>

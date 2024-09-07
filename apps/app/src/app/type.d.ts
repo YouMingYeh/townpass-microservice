@@ -6,7 +6,7 @@ export interface Location {
 export interface Report {
   id: string;
   username: string;
-  reason: string | null;
+  content: string | null;
   image: string | null;
   location: Location | null;
   tags: string[] | null;

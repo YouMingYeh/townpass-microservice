@@ -181,7 +181,7 @@ export const MapComponent = ({
           >
             <div>
               <h2>{selectedReport.username}</h2>
-              <p>{selectedReport.reason || 'No reason provided'}</p>
+              <p>{selectedReport.content || 'No content provided'}</p>
               <button onClick={() => onSelectReport(selectedReport)}>
                 查看詳細資訊
               </button>

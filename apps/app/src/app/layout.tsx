@@ -57,7 +57,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
       <meta content='yes' name='mobile-web-app-capable' />
       <meta content='yes' name='apple-touch-fullscreen' />
       <meta content='TownPass' name='apple-mobile-web-app-title' />
-      <meta content='yes' name='apple-mobile-web-app-capable' />
       <meta content='default' name='apple-mobile-web-app-status-bar-style' />
     </Head>
 
