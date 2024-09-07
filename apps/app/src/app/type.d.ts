@@ -5,19 +5,20 @@ export interface Location {
 }
 
 export interface Report {
-  id: string;
+  report_id: string;
   username: string;
   content: string | null;
   image: string | null;
   location: Location | null;
   tags: string[] | null;
-  emoji: string;
+  emoji: string | null;
 }
 
 export interface Comment {
   report_id: string;
   username: string;
-  time: string;
+  timestamp: number;
   content: string;
   image: string | null;
+  comment_id: string;
 }

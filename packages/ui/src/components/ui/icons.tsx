@@ -393,7 +393,7 @@ export const Icons = {
   Quote,
   LogOut,
   MessageCircle,
-  SlidersHorizontal
+  SlidersHorizontal,
 };
 
 export function nameToIcon(name: string) {

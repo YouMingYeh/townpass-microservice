@@ -1,6 +1,6 @@
 import { Report, Comment } from '../app/type';
-import { Badge, Textarea, Input, Button } from 'ui';
-import { useState, useEffect } from 'react';
+import { Badge, Textarea, Input, Button, Separator } from 'ui';
+import { useState, useRef } from 'react';
 
 interface ReportDetailsProps {
   selectedReport: Report;
@@ -22,7 +22,13 @@ export const ReportDetails = ({
   setSelectReport,
 }: ReportDetailsProps) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
-  //   console.log("report: ", reports)
+  const portfolioRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToPortfolio = () => {
+    if (portfolioRef.current) {
+      portfolioRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <div style={{ padding: '20px' }}>
       <p className='text-2xl'>{selectedReport.emoji}</p>
@@ -62,11 +68,12 @@ export const ReportDetails = ({
           </Badge>
         ))}
       </div>
-      <h3>留言區</h3>
+      <Separator className='my-4' />
+      <h2 className='text-2xl font-bold'>留言區</h2>
       {comments.map((comment, index) => (
         <div key={index}>
           <p>
-            <strong>{comment.username}</strong> ({comment.time}):{' '}
+            <strong>{comment.username}</strong> ({comment.timestamp}):{' '}
             {comment.content}
           </p>
           {comment.image && (
@@ -90,36 +97,38 @@ export const ReportDetails = ({
         <Button onClick={handleCommentSubmit}>送出留言</Button>
       </div>
       <div style={{ marginTop: '40px' }}>
-        <h3>附近發生了什麼🤔</h3>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '16px',
-            marginTop: '16px',
-          }}
-        >
+        <Separator className='my-4' />
+        <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
+        <div className='mt-4'>
           {reports.slice(0, 10).map((report, index) => (
             <div
-              key={report.id}
+              key={report.report_id}
               style={{
                 border: '1px solid #ccc',
                 padding: '10px',
                 cursor: 'pointer',
+                boxSizing: 'border-box',
+                marginBottom: '16px',
               }}
-              onClick={() => setSelectReport(report)}
+              onClick={() => {
+                setSelectReport(report);
+                scrollToPortfolio();
+              }}
             >
               <p>
                 <strong>{report.username}</strong>
               </p>
-              <p>{report.content || '無原因'}</p>
-              {report.image && (
-                <img
-                  src={report.image}
-                  alt='Nearby report'
-                  style={{ width: '100%', height: '100px', objectFit: 'cover' }}
-                />
-              )}
+              <p
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {report.content || '無原因'}
+              </p>
             </div>
           ))}
         </div>

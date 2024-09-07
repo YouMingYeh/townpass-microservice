@@ -62,11 +62,19 @@ export default function Home() {
     console.log('selectedReport:', selectedReport);
 
     const newCommentData = {
-      report_id: selectedReport?.id,
-      username: 'Current User',
+      report_id: selectedReport?.report_id,
+      username: userinfo?.username || '匿名',
       timestamp: Math.floor(Date.now() / 1000),
       content: newComment,
       image: imageUrl,
+    };
+    const newCommentDataForDisplay = {
+      report_id: selectedReport!.report_id,
+      username: userinfo?.username || '匿名',
+      timestamp: Math.floor(Date.now() / 1000),
+      content: newComment,
+      image: imageUrl,
+      comment_id: '123',
     };
 
     console.log('newCommentData:', newCommentData);
@@ -81,6 +89,7 @@ export default function Home() {
       .then(res => res.json())
       .then(data => {
         console.log('Comment submitted:', data);
+        setComments([...comments, newCommentDataForDisplay]);
         setNewComment('');
         setImageFile(null);
         handleSelectReport(selectedReport!);
@@ -131,13 +140,13 @@ export default function Home() {
           console.log('Report submitted:', data);
 
           setSelectedReport({
-            id: data.report_id,
-            username: data.report.username,
-            content: data.report.content,
-            image: data.report.image,
-            location: data.report.location,
-            tags: data.report.tags,
-            emoji: data.report.emoji,
+            report_id: data.report_id,
+            username: data.username,
+            content: data.content,
+            image: data.image,
+            location: data.location,
+            tags: data.tags,
+            emoji: data,
           });
 
           setNewReportContent('');
