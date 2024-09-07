@@ -6,6 +6,7 @@ import { Button, buttonVariants, cn, Icons } from 'ui';
 import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { ProfileIconMenu } from '../../modules/user/components/ProfileIconMenu';
+import Link from 'next/link';
 
 interface NavbarProps {
   children?: ReactNode;
@@ -36,6 +37,7 @@ export const NavBar: FC<NavbarProps> = () => {
             TownPass 城市通微服務
           </span>
         </div>
+
         <div className='hidden items-center space-x-6 md:flex'>
           <ProfileIconMenu />
         </div>
@@ -68,6 +70,10 @@ export const NavBar: FC<NavbarProps> = () => {
                 </p>
               </div>
             </div>
+            <Link href='/test'>
+            test
+            </Link>
+
             <Button
               className={cn(buttonVariants({ size: 'sm' }), 'px-4')}
               onClick={onLoginClick}
