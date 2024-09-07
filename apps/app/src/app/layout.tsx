@@ -54,6 +54,10 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang='en' suppressHydrationWarning>
     <Head>
+      <meta
+        http-equiv='Content-Security-Policy'
+        content='upgrade-insecure-requests'
+      />
       <meta content='yes' name='mobile-web-app-capable' />
       <meta content='yes' name='apple-touch-fullscreen' />
       <meta content='TownPass' name='apple-mobile-web-app-title' />
