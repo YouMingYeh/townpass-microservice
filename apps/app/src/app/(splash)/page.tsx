@@ -39,46 +39,8 @@ interface Comment {
   image: string | null;
 }
 
-const reports: Report[] = [
-  {
-    id: '1',
-    username: 'User1',
-    reason: 'Spam',
-    image: null,
-    location: { latitude: 25.027, longitude: 121.5335 },
-  },
-  {
-    id: '2',
-    username: 'User2',
-    reason: 'Harassment',
-    image: null,
-    location: { latitude: 25.029, longitude: 121.5535 },
-  },
-];
+const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
 
-const comments: Comment[] = [
-  {
-    report_id: '1',
-    username: 'Commenter1',
-    time: '2024-09-01 10:00',
-    content: 'This is inappropriate.',
-    image: null,
-  },
-  {
-    report_id: '1',
-    username: 'Commenter2',
-    time: '2024-09-01 11:00',
-    content: 'Please take action.',
-    image: null,
-  },
-  {
-    report_id: '2',
-    username: 'Commenter3',
-    time: '2024-09-01 12:00',
-    content: 'This is a spam message.',
-    image: null,
-  },
-];
 
 const MapComponent = ({
   onSelectReport,
@@ -91,6 +53,7 @@ const MapComponent = ({
   } | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
@@ -148,6 +111,16 @@ const MapComponent = ({
     return () => {
       clearInterval(updateLocation);
     };
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/report`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Fetched reports:', data);  
+        setReports(data);  
+      })
+      .catch((error) => console.error('Error fetching reports:', error));
   }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
@@ -211,14 +184,17 @@ export default function Home() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [newReportContent, setNewReportContent] = useState('');
-  const [currentLocation, setCurrentLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-
+  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const handleSelectReport = (report: Report) => {
     setSelectedReport(report);
     setActiveTab('details');
+
+    fetch(`${API_BASE_URL}/report/comments/${report.id}`)
+      .then((res) => res.json())
+      .then((data) => setComments(data))
+      .catch((error) => console.error('Error fetching comments:', error));
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -228,35 +204,85 @@ export default function Home() {
   };
 
   const handleCommentSubmit = () => {
-    console.log('提交留言:', newComment, imageFile);
-    setNewComment('');
-    setImageFile(null);
+    const newCommentData = {
+      report_id: selectedReport?.id,
+      username: 'Current User', 
+      timestamp: Math.floor(Date.now() / 1000), 
+      content: newComment,
+      image: imageFile ? URL.createObjectURL(imageFile) : null,
+    };
+
+    fetch(`${API_BASE_URL}/report/comment`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newCommentData),
+    })
+      .then((res) => res.text())
+      .then((data) => {
+        console.log('Comment submitted:', data);
+        setNewComment('');
+        setImageFile(null);
+        handleSelectReport(selectedReport!);
+      })
+      .catch((error) => console.error('Error submitting comment:', error));
+  };
+
+  const handleCreateReport = () => {
+    console.log("@@")
+    console.log(newReportContent)
+    console.log(currentLocation)
+    if (newReportContent && currentLocation) {
+      const newReportData = {
+        username: 'Current User', 
+        content: newReportContent,
+        timestamp: Math.floor(Date.now() / 1000), 
+        image: imageFile ? URL.createObjectURL(imageFile) : null,
+        location: currentLocation,
+      };
+
+      fetch(`${API_BASE_URL}/report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newReportData),
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          console.log('Report submitted:', data);
+          setNewReportContent('');
+          setImageFile(null);
+          setIsFormOpen(false);
+        })
+        .catch((error) => console.error('Error submitting report:', error));
+    }
   };
 
   const getCommentsForReport = (reportId: string) =>
     comments.filter(comment => comment.report_id === reportId);
 
-  const handleCreateReport = () => {
-    if (newReportContent && currentLocation) {
-      const newReport: Report = {
-        id: String(Date.now()),
-        username: 'Current User',
-        reason: newReportContent,
-        image: imageFile ? URL.createObjectURL(imageFile) : null,
-        location: currentLocation,
-      };
-      console.log('提交報告:', newReport);
-      setNewReportContent('');
-      setImageFile(null);
-      setIsFormOpen(false);
-    }
-  };
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setLocationError(null); 
+      },
+      (error) => {
+        setLocationError('Error getting location: ' + error.message); 
+      }
+    );
+  }, []);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab}>
-      <TabsList variant='underline' className='w-full'>
-        <TabsTrigger value='map'>地圖</TabsTrigger>
-        <TabsTrigger value='details'>詳細資訊</TabsTrigger>
+    <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+      <TabsList variant='underline' className="grid w-full grid-cols-2">
+        <TabsTrigger value="map">地圖</TabsTrigger>
+        <TabsTrigger value="details">詳細資訊</TabsTrigger>
       </TabsList>
 
       <TabsContent value='map'>
