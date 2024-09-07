@@ -6,7 +6,6 @@ import { MapComponent } from '../../components/MapComponent';
 import { ReportDetails } from '../../components/ReportDetails';
 import { ReportForm } from '../../components/ReportForm';
 import { Report, Comment } from '../type';
-import { useSearchParams } from 'next/navigation';
 
 const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
 

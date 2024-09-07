@@ -59,6 +59,7 @@ import {
   LibraryBig,
   BellOffIcon,
   SlidersHorizontal,
+  LocateFixed,
 } from 'lucide-react';
 import { forwardRef } from 'react';
 
@@ -331,6 +332,7 @@ const Google: LucideIcon = forwardRef((props: LucideProps, ref) => (
 export type Icon = LucideIcon;
 
 export const Icons = {
+  LocateFixed,
   ScanSearch,
   BellOffIcon,
   Bell,

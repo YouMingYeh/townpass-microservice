@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.4",
+    "@instantdb/react": "^0.12.26",
     "@next/eslint-plugin-next": "^12.3.0",
     "@next/third-parties": "^14.2.5",
     "@react-google-maps/api": "^2.19.3",
