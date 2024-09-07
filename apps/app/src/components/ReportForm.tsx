@@ -118,11 +118,12 @@ export const ReportForm = ({
             </Button>
           ))}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleSubmit}>提交</Button>
-          <Button onClick={resetForm} style={{ marginLeft: '10px' }}>
+        <div className='flex justify-center gap-4'>
+        <Button onClick={resetForm} style={{ marginLeft: '10px' }} variant='secondary'>
             取消
           </Button>
+          <Button onClick={handleSubmit}>提交</Button>
+          
         </div>
       </DialogContent>
     </Dialog>

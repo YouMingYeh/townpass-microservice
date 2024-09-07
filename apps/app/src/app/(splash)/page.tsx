@@ -146,7 +146,7 @@ export default function Home() {
             image: data.image,
             location: data.location,
             tags: data.tags,
-            emoji: data,
+            emoji: data.emoji,
           });
 
           setNewReportContent('');

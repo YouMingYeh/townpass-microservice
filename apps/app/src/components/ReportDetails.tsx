@@ -29,6 +29,7 @@ export const ReportDetails = ({
       portfolioRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  console.log('selectedReport:', selectedReport);
   return (
     <div style={{ padding: '20px' }}>
       <p className='text-2xl'>{selectedReport.emoji}</p>
