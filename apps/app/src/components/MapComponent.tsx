@@ -193,7 +193,7 @@ export const MapComponent = ({
                 onClick={() => setSelectedReport(report)}
                 animation={window.google.maps.Animation.DROP}
                 label={{
-                  text: report.emoji || '🙂',
+                  text: report.emoji,
                 }}
                 title={report.username}
               />
