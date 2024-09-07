@@ -16,6 +16,14 @@ import {
   Button,
   Textarea,
   useToast,
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
 } from 'ui';
 
 interface Location {
@@ -29,6 +37,7 @@ interface Report {
   reason: string | null;
   image: string | null;
   location: Location | null;
+  tags: string[] | null;
 }
 
 interface Comment {
@@ -40,6 +49,17 @@ interface Comment {
 }
 
 const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
+
+const tagsList = [
+  '路障',
+  '動物',
+  '事故',
+  '修路',
+  '壅塞',
+  '天氣',
+  '施工',
+  '其他',
+];
 
 const MapComponent = ({
   onSelectReport,
@@ -54,27 +74,38 @@ const MapComponent = ({
   } | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
 
   const { toast } = useToast();
-
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prevTags =>
+      prevTags.includes(tag)
+        ? prevTags.filter(t => t !== tag)
+        : [...prevTags, tag],
+    );
+  };
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         setCurrentLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
         setLocationError(null);
       },
-      (error) => {
+      error => {
         setLocationError('Error getting location: ' + error.message);
-      }
+      },
     );
   }, []);
-
+  const filteredReports = reports.filter(
+    report =>
+      !selectedTags.length ||
+      report.tags?.some(tag => selectedTags.includes(tag)),
+  );
   // flutter web message listener
   useEffect(() => {
     // @ts-ignore
@@ -115,10 +146,68 @@ const MapComponent = ({
 
   return (
     <>
+      <Drawer>
+        <DrawerTrigger
+          style={{
+            position: 'absolute',
+            top: '60px',
+            right: '10px',
+            zIndex: 1000,
+          }}
+        >
+          篩選
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>篩選條件</DrawerTitle>
+          </DrawerHeader>
+
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '10px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              maxWidth: '600px',
+              margin: '0 auto',
+            }}
+          >
+            {tagsList.map(tag => (
+              <Button
+                key={tag}
+                onClick={() => toggleTag(tag)}
+                style={{
+                  backgroundColor: selectedTags.includes(tag)
+                    ? '#5AB4C5'
+                    : '#e5e5e5',
+                  color: selectedTags.includes(tag) ? '#fff' : '#000',
+                  borderRadius: '5px',
+                  padding: '5px 10px',
+                  flex: '0 0 calc(25% - 10px)',
+                  textAlign: 'center',
+                }}
+              >
+                {tag}
+              </Button>
+            ))}
+          </div>
+          <DrawerFooter>
+            <DrawerClose>
+              <Button variant='outline'>關閉</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
       <GoogleMap
         center={currentLocation || { lat: 25.033, lng: 121.5654 }}
         zoom={14}
         mapContainerStyle={{ height: '100vh', width: '100%' }}
+        options={{
+          mapTypeControl: false,
+          fullscreenControl: false,
+        }}
       >
         {currentLocation && (
           <Marker
@@ -128,7 +217,7 @@ const MapComponent = ({
             }}
           />
         )}
-        {/* {reports.map(
+        {filteredReports.map(
           (report, index) =>
             report.location && (
               <Marker
@@ -140,7 +229,7 @@ const MapComponent = ({
                 onClick={() => setSelectedReport(report)}
               />
             ),
-        )} */}
+        )}
 
         {selectedReport && (
           <InfoWindow
@@ -222,9 +311,6 @@ export default function Home() {
   };
 
   const handleCreateReport = () => {
-    console.log('@@');
-    console.log(newReportContent);
-    console.log(currentLocation);
     if (newReportContent && currentLocation) {
       const newReportData = {
         username: 'Current User',
@@ -270,7 +356,7 @@ export default function Home() {
     );
   }, []);
   useEffect(() => {
-    if(!currentLocation?.lat || !currentLocation?.lng) return;
+    if (!currentLocation?.lat || !currentLocation?.lng) return;
 
     fetch(
       `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation.lat}&longitude=${currentLocation.lng}`,
@@ -284,9 +370,19 @@ export default function Home() {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="map" className="bg-white border-b-white relative flex-1 rounded-none border-b-4 font-normal shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] text-[#5AB4C5] data-[state=active]:font-bold">地圖</TabsTrigger>
-        <TabsTrigger value="details" className="bg-white border-b-white relative flex-1 rounded-none border-b-4 font-normal shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] text-[#5AB4C5] data-[state=active]:font-bold">詳細資訊</TabsTrigger>
+      <TabsList className='grid w-full grid-cols-2'>
+        <TabsTrigger
+          value='map'
+          className='relative flex-1 rounded-none border-b-4 border-b-white bg-white font-normal text-[#5AB4C5] shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] data-[state=active]:font-bold'
+        >
+          地圖
+        </TabsTrigger>
+        <TabsTrigger
+          value='details'
+          className='relative flex-1 rounded-none border-b-4 border-b-white bg-white font-normal text-[#5AB4C5] shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] data-[state=active]:font-bold'
+        >
+          詳細資訊
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value='map'>
