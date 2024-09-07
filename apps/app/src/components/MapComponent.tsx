@@ -211,10 +211,16 @@ export const MapComponent = ({
             <div>
               <p className='mb-2 text-2xl'>{selectedReport.emoji || '🙂'}</p>
               <h2 className='mb-2 font-bold'>{selectedReport.username}</h2>
-
-              <p className='mb-2'>{selectedReport.content || '沒有內文'}</p>
-              <p className='mb-2'>
-                {selectedReport.location?.address || '沒有地址'}
+              <p
+                style={{
+                  display: '-webkit-box',
+                  WebkitLineClamp: 3,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {selectedReport.content || '沒有內文'}
               </p>
               {selectedReport.image && (
                 <img
