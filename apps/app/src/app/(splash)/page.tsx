@@ -26,7 +26,6 @@ export default function Home() {
   const [locationError, setLocationError] = useState<string | null>(null);
   const [userinfo, setUserinfo] = useState<any | null>(null);
 
-  
   const handleSelectReport = (report: Report) => {
     setSelectedReport(report);
     setActiveTab('details');

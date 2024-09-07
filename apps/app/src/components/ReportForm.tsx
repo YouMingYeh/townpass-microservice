@@ -50,7 +50,6 @@ export const ReportForm = ({
   const handleSubmit = async () => {
     try {
       setLoading(true);
-
       handleCreateReport({
         content: newReportContent,
         tags: selectedTags,
@@ -114,11 +113,14 @@ export const ReportForm = ({
           ))}
         </div>
         <div className='flex justify-center gap-4'>
-        <Button onClick={resetForm} style={{ marginLeft: '10px' }} variant='secondary'>
+          <Button
+            onClick={resetForm}
+            style={{ marginLeft: '10px' }}
+            variant='secondary'
+          >
             取消
           </Button>
           <Button onClick={handleSubmit}>提交</Button>
-          
         </div>
       </DialogContent>
     </Dialog>

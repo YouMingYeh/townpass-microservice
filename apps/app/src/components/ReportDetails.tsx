@@ -57,13 +57,21 @@ export const ReportDetails = ({
           marginTop: '10px',
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '8px',
+          marginLeft: '0px',
         }}
       >
         {selectedReport.tags?.map((tag, index) => (
           <Badge
             key={index}
-            style={{ backgroundColor: '#5AB4C5', color: '#fff' }}
+            style={{
+              backgroundColor: '#5AB4C5',
+              color: '#fff',
+              borderRadius: '15px',
+              padding: '4px',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              marginRight: '6px',
+            }}
           >
             {tag}
           </Badge>
@@ -83,7 +91,6 @@ export const ReportDetails = ({
         </div>
       ))}
       <div style={{ marginTop: '20px' }}>
-        <h3>新增留言</h3>
         <Textarea
           placeholder='輸入您的留言...'
           value={newComment}
@@ -93,9 +100,16 @@ export const ReportDetails = ({
         <Input
           type='file'
           onChange={e => setImageFile(e.target.files![0])}
-          className='mb-2'
+          style={{
+            paddingLeft: '0px',
+            border: 'none',
+            boxShadow: 'none',
+            outline: 'none',
+          }}
         />
-        <Button onClick={handleCommentSubmit}>送出留言</Button>
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={handleCommentSubmit}>送出留言</Button>
+        </div>
       </div>
       <div style={{ marginTop: '40px' }}>
         <Separator className='my-4' />
