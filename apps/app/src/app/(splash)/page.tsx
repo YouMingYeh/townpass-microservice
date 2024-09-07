@@ -29,8 +29,60 @@ export default function Home() {
     setSelectedReport(report);
     setActiveTab('details');
   };
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
 
-  const handleCreateReport = ({
+    const response = await fetch(`${API_BASE_URL}/image/upload/`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Image upload failed');
+    }
+
+    const imageUrl = await response.json();
+    return imageUrl;
+  };
+
+  const handleCommentSubmit = async () => {
+    let imageUrl = null;
+
+    if (imageFile) {
+      try {
+        imageUrl = await uploadImage(imageFile);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        return;
+      }
+    }
+
+    const newCommentData = {
+      report_id: selectedReport?.id,
+      username: 'Current User',
+      timestamp: Math.floor(Date.now() / 1000),
+      content: newComment,
+      image: imageUrl,
+    };
+
+    fetch(`${API_BASE_URL}/report/comment/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newCommentData),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Comment submitted:', data);
+        setNewComment('');
+        setImageFile(null);
+        handleSelectReport(selectedReport!);
+      })
+      .catch(error => console.error('Error submitting comment:', error));
+  };
+  const handleCreateReport = async ({
     content,
     tags,
     image,
@@ -39,12 +91,23 @@ export default function Home() {
     tags: string[];
     image: File | null;
   }) => {
+    let imageUrl = null;
+
+    if (image) {
+      try {
+        imageUrl = await uploadImage(image);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        return;
+      }
+    }
+
     if (content && currentLocation) {
       const newReportData = {
         username: 'Current User',
         content,
         timestamp: Math.floor(Date.now() / 1000),
-        image: image ? URL.createObjectURL(image) : null,
+        image: imageUrl,
         location: currentLocation,
         tags,
       };
@@ -63,7 +126,7 @@ export default function Home() {
             id: reportId,
             username: 'Current User',
             reason: content,
-            image: image ? URL.createObjectURL(image) : null,
+            image: imageUrl,
             location: currentLocation,
             tags,
           });
@@ -203,8 +266,8 @@ export default function Home() {
             comments={comments}
             newComment={newComment}
             setNewComment={setNewComment}
-            handleCommentSubmit={() => {}}
-            handleImageUpload={() => {}}
+            handleCommentSubmit={handleCommentSubmit}
+            uploadImage={uploadImage}
           />
         )}
       </TabsContent>
@@ -229,6 +292,7 @@ export default function Home() {
         isOpen={isFormOpen}
         setIsOpen={setIsFormOpen}
         handleCreateReport={handleCreateReport}
+        uploadImage={uploadImage}
       />
     </Tabs>
   );

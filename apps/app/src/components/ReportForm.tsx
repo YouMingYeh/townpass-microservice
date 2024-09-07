@@ -23,7 +23,12 @@ const tagsList = [
 
 const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
 
-export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
+export const ReportForm = ({
+  isOpen,
+  setIsOpen,
+  handleCreateReport,
+  uploadImage,
+}: any) => {
   const [newReportContent, setNewReportContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -66,23 +71,6 @@ export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const uploadImage = async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await fetch(`${API_BASE_URL}/image/upload/`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error('Image upload failed');
-    }
-
-    const imageUrl = await response.json();
-    return imageUrl;
   };
 
   return (
