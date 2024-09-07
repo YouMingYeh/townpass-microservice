@@ -32,7 +32,22 @@ export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
         ? prevTags.filter(t => t !== tag)
         : [...prevTags, tag],
     );
+  const resetForm = () => {
+    setNewReportContent('');
+    setSelectedTags([]);
+    setImageFile(null);
+    setIsOpen(false);
+  };
 
+  const handleSubmit = () => {
+    handleCreateReport({
+      content: newReportContent,
+      tags: selectedTags,
+      image: imageFile,
+    });
+
+    resetForm();
+  };
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent style={{ maxWidth: '400px', padding: '20px' }}>
@@ -79,21 +94,8 @@ export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            onClick={() =>
-              handleCreateReport({
-                content: newReportContent,
-                tags: selectedTags,
-                image: imageFile,
-              })
-            }
-          >
-            提交
-          </Button>
-          <Button
-            onClick={() => setIsOpen(false)}
-            style={{ marginLeft: '10px' }}
-          >
+          <Button onClick={handleSubmit}>提交</Button>
+          <Button onClick={resetForm} style={{ marginLeft: '10px' }}>
             取消
           </Button>
         </div>
