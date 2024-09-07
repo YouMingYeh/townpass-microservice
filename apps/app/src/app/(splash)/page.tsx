@@ -62,16 +62,16 @@ const MapComponent = ({
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         setCurrentLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
         setLocationError(null);
       },
-      (error) => {
+      error => {
         setLocationError('Error getting location: ' + error.message);
-      }
+      },
     );
   }, []);
 
@@ -183,7 +183,9 @@ export default function Home() {
     setSelectedReport(report);
     setActiveTab('details');
 
-    fetch(`${API_BASE_URL}/report/comments/${report.id}`)
+    fetch(`${API_BASE_URL}/report/comments/${report.id}`, {
+      mode: 'no-cors',
+    })
       .then(res => res.json())
       .then(data => setComments(data))
       .catch(error => console.error('Error fetching comments:', error));
@@ -204,10 +206,11 @@ export default function Home() {
       image: imageFile ? URL.createObjectURL(imageFile) : null,
     };
 
-    fetch(`${API_BASE_URL}/report/comment`, {
+      fetch(`${API_BASE_URL}/report/comment`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Forwarded-Proto': 'https',
       },
       body: JSON.stringify(newCommentData),
     })
@@ -238,6 +241,7 @@ export default function Home() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Forwarded-Proto': 'https',
         },
         body: JSON.stringify(newReportData),
       })
@@ -270,7 +274,7 @@ export default function Home() {
     );
   }, []);
   useEffect(() => {
-    if(!currentLocation?.lat || !currentLocation?.lng) return;
+    if (!currentLocation?.lat || !currentLocation?.lng) return;
 
     fetch(
       `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation.lat}&longitude=${currentLocation.lng}`,
@@ -284,9 +288,19 @@ export default function Home() {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="map" className="bg-white border-b-white relative flex-1 rounded-none border-b-4 font-normal shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] text-[#5AB4C5] data-[state=active]:font-bold">地圖</TabsTrigger>
-        <TabsTrigger value="details" className="bg-white border-b-white relative flex-1 rounded-none border-b-4 font-normal shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] text-[#5AB4C5] data-[state=active]:font-bold">詳細資訊</TabsTrigger>
+      <TabsList className='grid w-full grid-cols-2'>
+        <TabsTrigger
+          value='map'
+          className='relative flex-1 rounded-none border-b-4 border-b-white bg-white font-normal text-[#5AB4C5] shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] data-[state=active]:font-bold'
+        >
+          地圖
+        </TabsTrigger>
+        <TabsTrigger
+          value='details'
+          className='relative flex-1 rounded-none border-b-4 border-b-white bg-white font-normal text-[#5AB4C5] shadow-none transition-none focus-visible:ring-0 data-[state=active]:border-b-[#5AB4C5] data-[state=active]:font-bold'
+        >
+          詳細資訊
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value='map'>
