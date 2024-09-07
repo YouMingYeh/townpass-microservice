@@ -283,13 +283,6 @@ export default function Home() {
   const handleSelectReport = (report: Report) => {
     setSelectedReport(report);
     setActiveTab('details');
-
-    fetch(`${API_BASE_URL}/report/comments/${report.id}/`, {
-      mode: 'no-cors',
-    })
-      .then(res => res.json())
-      .then(data => setComments(data))
-      .catch(error => console.error('Error fetching comments:', error));
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -307,7 +300,7 @@ export default function Home() {
       image: imageFile ? URL.createObjectURL(imageFile) : null,
     };
 
-      fetch(`${API_BASE_URL}/report/comment/`, {
+    fetch(`${API_BASE_URL}/report/comment/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
