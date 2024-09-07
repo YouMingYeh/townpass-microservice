@@ -129,6 +129,13 @@ const MapComponent = ({
   
 
   useEffect(() => {
+    // @ts-ignore
+    if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
+      // @ts-ignore
+      window.flutterObject.postMessage(
+        JSON.stringify({ name: 'location', data: 'null' }),
+      );
+    }
     const updateLocation = setInterval(() => {
       // @ts-ignore
       if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
