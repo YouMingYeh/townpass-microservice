@@ -317,7 +317,6 @@ export default function Home() {
         isOpen={isFormOpen}
         setIsOpen={setIsFormOpen}
         handleCreateReport={handleCreateReport}
-        uploadImage={uploadImage}
       />
     </Tabs>
   );

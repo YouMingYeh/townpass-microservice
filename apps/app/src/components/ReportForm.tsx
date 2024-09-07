@@ -27,7 +27,6 @@ export const ReportForm = ({
   isOpen,
   setIsOpen,
   handleCreateReport,
-  uploadImage,
 }: any) => {
   const [newReportContent, setNewReportContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -52,14 +51,10 @@ export const ReportForm = ({
     try {
       setLoading(true);
 
-      let imageUrl = '';
-      if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
-      }
       handleCreateReport({
         content: newReportContent,
         tags: selectedTags,
-        image: imageUrl,
+        image: imageFile,
       });
 
       setNewReportContent('');
