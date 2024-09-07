@@ -111,43 +111,26 @@ export const ReportDetails = ({
           <Button onClick={handleCommentSubmit}>送出留言</Button>
         </div>
       </div>
-      <div style={{ marginTop: '40px' }}>
-        <Separator className='my-4' />
-        <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
-        <div className='mt-4'>
-          {reports.slice(0, 10).map((report, index) => (
-            <div
-              key={report.report_id}
-              style={{
-                border: '1px solid #ccc',
-                padding: '10px',
-                cursor: 'pointer',
-                boxSizing: 'border-box',
-                marginBottom: '16px',
-              }}
-              onClick={() => {
-                setSelectReport(report);
-                scrollToPortfolio();
-              }}
-            >
-              <p>
-                <strong>{report.username}</strong>
-              </p>
-              <p
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {report.content || '無原因'}
-              </p>
+      <div style={{ marginTop: '40px' }} className='p-4 overflow-auto'>
+            <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
+            <div className='mt-4 flex flex-1 flex-col gap-4'>
+              {reports.slice(0, 10).map((report, index) => (
+                <div
+                  key={report.report_id}
+                  className='cursor-pointer border border-border rounded shadow p-4'
+                  onClick={() => {
+                    setSelectReport(report);
+                  }}
+                >
+                  <div>
+                    <p className='text-2xl'>{report.emoji || '🙂'}</p>
+                    <h2 className='text-xl font-bold'>{report.username}</h2>
+                    <p>{report.content}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
     </div>
   );
 };

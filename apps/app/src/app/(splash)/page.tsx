@@ -253,7 +253,11 @@ export default function Home() {
   }, [currentLocation]);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+    <Tabs
+      value={activeTab}
+      onValueChange={setActiveTab}
+      className='fixed top-0 w-full'
+    >
       <TabsList className='grid w-full grid-cols-2'>
         <TabsTrigger
           value='map'
@@ -282,8 +286,8 @@ export default function Home() {
         </div>
       </TabsContent>
 
-      <TabsContent value='details'>
-        {selectedReport && (
+      <TabsContent value='details' className='h-[95vh] overflow-auto'>
+        {selectedReport ? (
           <ReportDetails
             selectedReport={selectedReport}
             comments={comments}
@@ -293,6 +297,27 @@ export default function Home() {
             reports={nearbyReports}
             setSelectReport={setSelectedReport}
           />
+        ) : (
+          <div style={{ marginTop: '40px' }} className='p-4 overflow-auto'>
+            <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
+            <div className='mt-4 flex flex-1 flex-col gap-4'>
+              {nearbyReports.slice(0, 10).map((report, index) => (
+                <div
+                  key={report.report_id}
+                  className='cursor-pointer border border-border rounded shadow p-4'
+                  onClick={() => {
+                    setSelectedReport(report);
+                  }}
+                >
+                  <div>
+                    <p className='text-2xl'>{report.emoji || '🙂'}</p>
+                    <h2 className='text-xl font-bold'>{report.username}</h2>
+                    <p>{report.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </TabsContent>
       <button
