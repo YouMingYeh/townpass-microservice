@@ -39,13 +39,6 @@ export const ProfileIconMenu: FC = () => {
           >
             主頁
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              push('/test');
-            }}
-          >
-            測試
-          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
       </DropdownMenuContent>

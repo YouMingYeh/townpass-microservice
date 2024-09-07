@@ -70,8 +70,6 @@ export const NavBar: FC<NavbarProps> = () => {
                 </p>
               </div>
             </div>
-            <Link href='/test'>test</Link>
-
             <Button
               className={cn(buttonVariants({ size: 'sm' }), 'px-4')}
               onClick={onLoginClick}
