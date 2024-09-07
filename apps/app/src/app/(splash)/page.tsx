@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { Tabs, TabsContent, TabsList, TabsTrigger, Input, Button, Textarea } from 'ui';
 
@@ -38,19 +38,42 @@ const comments: Comment[] = [
 
 const MapComponent = ({ onSelectReport }: { onSelectReport: (report: Report) => void }) => {
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setLocationError(null); 
+      },
+      (error) => {
+        setLocationError('Error getting location: ' + error.message); 
+      }
+    );
+  }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
 
-  return (
+  return (<>
     <GoogleMap
       center={currentLocation || { lat: 25.0330, lng: 121.5654 }}
       zoom={14}
       mapContainerStyle={{ height: '100vh', width: '100%' }}
     >
+      {currentLocation && (
+          <Marker
+            position={currentLocation}
+            icon={{
+              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+            }}
+          />
+        )}
       {reports.map((report, index) => (
         report.location && (
           <Marker
@@ -74,6 +97,8 @@ const MapComponent = ({ onSelectReport }: { onSelectReport: (report: Report) => 
         </InfoWindow>
       )}
     </GoogleMap>
+    {locationError && <p style={{ color: 'red' }}>{locationError}</p>}
+    </>
   );
 };
 
