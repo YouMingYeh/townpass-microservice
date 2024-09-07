@@ -19,13 +19,14 @@ export default function Page() {
     // @ts-ignore
     if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
       // @ts-ignore
-      window.flutterObject.listen('location', (message: Location) => {
+      window.flutterObject.addEventListener('location', (message: Location) => {
         setLocation(message);
       });
     }
   }, []);
   useEffect(() => {
     const updateLocation = setInterval(() => {
+      
       // @ts-ignore
       if (typeof window.flutterObject !== 'undefined' && window.flutterObject) {
         // @ts-ignore
