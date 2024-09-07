@@ -25,7 +25,9 @@ export const ReportDetails = ({
   //   console.log("report: ", reports)
   return (
     <div style={{ padding: '20px' }}>
-      <h2 className='font-bold text-2xl'>報告詳細資訊</h2>
+      <p className='text-2xl'>{selectedReport.emoji}</p>
+      <h2 className='text-2xl font-bold'>報告詳細資訊</h2>
+
       <p>
         <strong>使用者：</strong> {selectedReport.username}
       </p>

@@ -11,6 +11,7 @@ export interface Report {
   image: string | null;
   location: Location | null;
   tags: string[] | null;
+  emoji: string;
 }
 
 export interface Comment {

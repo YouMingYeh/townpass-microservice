@@ -46,7 +46,7 @@ export const MapComponent = ({
   };
   setCurrentLocation: (location: { lat: number; lng: number }) => void;
 }) => {
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(
     null,
   );
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
@@ -58,15 +58,19 @@ export const MapComponent = ({
   });
   const { toast } = useToast();
 
-  useEffect(() => {
+  const handleGetLocation = () => {
     navigator.geolocation.getCurrentPosition(
       position =>
-        setLocation({
+        setCenter({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         }),
       error => setLocationError('Error getting location: ' + error.message),
     );
+  }
+
+  useEffect(() => {
+    handleGetLocation();
   }, []);
 
   const toggleTag = (tag: string) => {
@@ -141,8 +145,13 @@ export const MapComponent = ({
         </DrawerContent>
       </Drawer>
 
+      <Button size='icon' variant='outline' onClick={handleGetLocation} style={{ zIndex: 1000, top: '120px',
+            right: '10px',}} className='absolute rounded-full bg-background'> 
+        <Icons.LocateFixed />
+      </Button>
+
       <GoogleMap
-        center={location || { lat: 25.033, lng: 121.5654 }}
+        center={center || { lat: 25.033, lng: 121.5654 }}
         zoom={14}
         mapContainerStyle={{ height: '100%', width: '100%' }}
         options={{
@@ -151,13 +160,20 @@ export const MapComponent = ({
           streetViewControl: false,
           scaleControl: false,
           zoomControl: false,
+          clickableIcons: false,
         }}
       >
         {currentLocation && (
           <Marker
             position={currentLocation}
             icon={{
-              url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+              url: '/marker.png',
+              scaledSize: new window.google.maps.Size(40, 40),
+            }}
+            animation={window.google.maps.Animation.DROP}
+            label={{
+              text: '你',
+              className: 'font-bold',
             }}
           />
         )}
@@ -170,7 +186,16 @@ export const MapComponent = ({
                   lat: report.location.lat,
                   lng: report.location.lng,
                 }}
+                icon={{
+                  url: '/marker.png',
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
                 onClick={() => setSelectedReport(report)}
+                animation={window.google.maps.Animation.DROP}
+                label={{
+                  text: report.emoji,
+                }}
+                title={report.username}
               />
             ),
         )}
@@ -184,9 +209,13 @@ export const MapComponent = ({
             onCloseClick={() => setSelectedReport(null)}
           >
             <div>
-              <h2 className='font-bold mb-2'>{selectedReport.username}</h2>
+              <p className='mb-2 text-2xl'>{selectedReport.emoji || '🙂'}</p>
+              <h2 className='mb-2 font-bold'>{selectedReport.username}</h2>
+
               <p className='mb-2'>{selectedReport.content || '沒有內文'}</p>
-              <p className='mb-2'>{selectedReport.location?.address || '沒有地址'}</p>
+              <p className='mb-2'>
+                {selectedReport.location?.address || '沒有地址'}
+              </p>
               {selectedReport.image && (
                 <img
                   src={selectedReport.image}

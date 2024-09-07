@@ -26,6 +26,7 @@ export default function Home() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [userinfo, setUserinfo] = useState<any | null>(null);
+
   const handleSelectReport = (report: Report) => {
     setSelectedReport(report);
     setActiveTab('details');
@@ -137,6 +138,7 @@ export default function Home() {
             image: data.report.image,
             location: data.report.location,
             tags: data.report.tags,
+            emoji: data.report.emoji,
           });
 
           setNewReportContent('');
