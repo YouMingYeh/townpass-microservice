@@ -41,7 +41,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
@@ -55,7 +54,6 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang='en' suppressHydrationWarning>
     <Head>
-      <link href='/manifest.json' rel='manifest' />
       <meta content='yes' name='mobile-web-app-capable' />
       <meta content='yes' name='apple-touch-fullscreen' />
       <meta content='TownPass' name='apple-mobile-web-app-title' />

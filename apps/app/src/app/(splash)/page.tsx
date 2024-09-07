@@ -41,11 +41,12 @@ interface Comment {
 
 const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
 
-
 const MapComponent = ({
   onSelectReport,
+  reports,
 }: {
   onSelectReport: (report: Report) => void;
+  reports: Report[];
 }) => {
   const [currentLocation, setCurrentLocation] = useState<{
     lat: number;
@@ -53,27 +54,26 @@ const MapComponent = ({
   } | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
-  const [reports, setReports] = useState<Report[]>([]);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
 
   const { toast } = useToast();
 
-  // useEffect(() => {
-  //   navigator.geolocation.getCurrentPosition(
-  //     (position) => {
-  //       setCurrentLocation({
-  //         lat: position.coords.latitude,
-  //         lng: position.coords.longitude,
-  //       });
-  //       setLocationError(null);
-  //     },
-  //     (error) => {
-  //       setLocationError('Error getting location: ' + error.message);
-  //     }
-  //   );
-  // }, []);
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setLocationError(null);
+      },
+      (error) => {
+        setLocationError('Error getting location: ' + error.message);
+      }
+    );
+  }, []);
 
   // flutter web message listener
   useEffect(() => {
@@ -88,8 +88,6 @@ const MapComponent = ({
       };
     }
   }, []);
-
-  
 
   useEffect(() => {
     // @ts-ignore
@@ -111,16 +109,6 @@ const MapComponent = ({
     return () => {
       clearInterval(updateLocation);
     };
-  }, []);
-
-  useEffect(() => {
-    fetch(`${API_BASE_URL}/report`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Fetched reports:', data);  
-        setReports(data);  
-      })
-      .catch((error) => console.error('Error fetching reports:', error));
   }, []);
 
   if (!isLoaded) return <div>Loading...</div>;
@@ -179,12 +167,16 @@ const MapComponent = ({
 
 export default function Home() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [nearbyReports, setNearbyReports] = useState<Report[]>([]);
   const [activeTab, setActiveTab] = useState<string>('map');
   const [newComment, setNewComment] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [newReportContent, setNewReportContent] = useState('');
-  const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [locationError, setLocationError] = useState<string | null>(null);
   const handleSelectReport = (report: Report) => {
@@ -192,9 +184,9 @@ export default function Home() {
     setActiveTab('details');
 
     fetch(`${API_BASE_URL}/report/comments/${report.id}`)
-      .then((res) => res.json())
-      .then((data) => setComments(data))
-      .catch((error) => console.error('Error fetching comments:', error));
+      .then(res => res.json())
+      .then(data => setComments(data))
+      .catch(error => console.error('Error fetching comments:', error));
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,8 +198,8 @@ export default function Home() {
   const handleCommentSubmit = () => {
     const newCommentData = {
       report_id: selectedReport?.id,
-      username: 'Current User', 
-      timestamp: Math.floor(Date.now() / 1000), 
+      username: 'Current User',
+      timestamp: Math.floor(Date.now() / 1000),
       content: newComment,
       image: imageFile ? URL.createObjectURL(imageFile) : null,
     };
@@ -219,25 +211,25 @@ export default function Home() {
       },
       body: JSON.stringify(newCommentData),
     })
-      .then((res) => res.text())
-      .then((data) => {
+      .then(res => res.text())
+      .then(data => {
         console.log('Comment submitted:', data);
         setNewComment('');
         setImageFile(null);
         handleSelectReport(selectedReport!);
       })
-      .catch((error) => console.error('Error submitting comment:', error));
+      .catch(error => console.error('Error submitting comment:', error));
   };
 
   const handleCreateReport = () => {
-    console.log("@@")
-    console.log(newReportContent)
-    console.log(currentLocation)
+    console.log('@@');
+    console.log(newReportContent);
+    console.log(currentLocation);
     if (newReportContent && currentLocation) {
       const newReportData = {
-        username: 'Current User', 
+        username: 'Current User',
         content: newReportContent,
-        timestamp: Math.floor(Date.now() / 1000), 
+        timestamp: Math.floor(Date.now() / 1000),
         image: imageFile ? URL.createObjectURL(imageFile) : null,
         location: currentLocation,
       };
@@ -249,14 +241,14 @@ export default function Home() {
         },
         body: JSON.stringify(newReportData),
       })
-        .then((res) => res.text())
-        .then((data) => {
+        .then(res => res.text())
+        .then(data => {
           console.log('Report submitted:', data);
           setNewReportContent('');
           setImageFile(null);
           setIsFormOpen(false);
         })
-        .catch((error) => console.error('Error submitting report:', error));
+        .catch(error => console.error('Error submitting report:', error));
     }
   };
 
@@ -265,29 +257,42 @@ export default function Home() {
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         setCurrentLocation({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
-        setLocationError(null); 
+        setLocationError(null);
       },
-      (error) => {
-        setLocationError('Error getting location: ' + error.message); 
-      }
+      error => {
+        setLocationError('Error getting location: ' + error.message);
+      },
     );
   }, []);
+  useEffect(() => {
+    fetch(
+      `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation?.lat}&longitude=${currentLocation?.lng}`,
+    )
+      .then(
+        res => res.json() as Promise<{ report: Report; distance: number }[]>,
+      )
+      .then(data => setNearbyReports(data.map(d => d.report)))
+      .catch(error => console.error('Error fetching nearby reports:', error));
+  }, [currentLocation]);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-      <TabsList variant='underline' className="grid w-full grid-cols-2">
-        <TabsTrigger value="map">地圖</TabsTrigger>
-        <TabsTrigger value="details">詳細資訊</TabsTrigger>
+    <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <TabsList variant='underline' width='full'>
+        <TabsTrigger value='map'>地圖</TabsTrigger>
+        <TabsTrigger value='details'>詳細資訊</TabsTrigger>
       </TabsList>
 
       <TabsContent value='map'>
         <div style={{ height: '100vh', width: '100%' }}>
-          <MapComponent onSelectReport={handleSelectReport} />
+          <MapComponent
+            onSelectReport={handleSelectReport}
+            reports={nearbyReports}
+          />
         </div>
       </TabsContent>
 
@@ -345,7 +350,18 @@ export default function Home() {
             </div>
           </div>
         ) : (
-          <p>請選擇一個報告查看詳細資訊。</p>
+          <div>
+            <h2>附近報告</h2>
+            {nearbyReports.map((report, index) => (
+              <div key={index} style={{ marginBottom: '20px' }}>
+                <h3>{report.username}</h3>
+                <p>{report.reason || 'No reason provided'}</p>
+                <button onClick={() => handleSelectReport(report)}>
+                  查看詳細資訊
+                </button>
+              </div>
+            ))}
+          </div>
         )}
       </TabsContent>
       <button
