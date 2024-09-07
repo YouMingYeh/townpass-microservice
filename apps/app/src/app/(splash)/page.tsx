@@ -43,6 +43,7 @@ const MapComponent = ({ onSelectReport }: { onSelectReport: (report: Report) => 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyB-Jcq0ZxIGGHmKkncVs2iJhY3nRYebe7Y',
   });
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -107,6 +108,9 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<string>('map');
   const [newComment, setNewComment] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const [newReportContent, setNewReportContent] = useState('');
+  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   const handleSelectReport = (report: Report) => {
     setSelectedReport(report);
@@ -126,6 +130,22 @@ export default function Home() {
   };
 
   const getCommentsForReport = (reportId: string) => comments.filter(comment => comment.report_id === reportId);
+
+  const handleCreateReport = () => {
+    if (newReportContent && currentLocation) {
+      const newReport: Report = {
+        id: String(Date.now()),
+        username: 'Current User', 
+        reason: newReportContent,
+        image: imageFile ? URL.createObjectURL(imageFile) : null,
+        location: currentLocation,
+      };
+      console.log('提交報告:', newReport);
+      setNewReportContent('');
+      setImageFile(null);
+      setIsFormOpen(false);
+    }
+  };
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -171,6 +191,55 @@ export default function Home() {
           <p>請選擇一個報告查看詳細資訊。</p>
         )}
       </TabsContent>
+      <button
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          backgroundColor: '#5AB4C5',
+          color: '#fff',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          border: 'none',
+          fontSize: '24px',
+        }}
+        onClick={() => setIsFormOpen(true)}
+      >
+        +
+      </button>
+
+      {isFormOpen && (
+        <div
+        style={{
+          position: 'fixed',
+          top: '60%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: '#fff',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          width: '300px',
+          height: '400px',
+        }}
+        >
+          <h3 className="mb-4">新增報告</h3>
+          <Textarea
+            placeholder="輸入報告內容"
+            value={newReportContent}
+            onChange={(e) => setNewReportContent(e.target.value)}
+            className="mb-4"
+            style={{ height: '200px' }}
+          />
+          <Input type="file" onChange={handleImageUpload} className="mb-4" />
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <Button onClick={handleCreateReport}>提交</Button>
+    <Button onClick={() => setIsFormOpen(false)} style={{ marginLeft: '10px' }}>取消</Button>
+  </div>
+          
+        </div>
+      )}
     </Tabs>
   );
 }
