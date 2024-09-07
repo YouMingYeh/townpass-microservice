@@ -519,7 +519,6 @@ export default function Home() {
       </button>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogTrigger>Open</DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>新增報告</DialogTitle>
