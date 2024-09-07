@@ -30,15 +30,23 @@ export default function Home() {
     setActiveTab('details');
   };
 
-  const handleCreateReport = () => {
-    if (newReportContent && currentLocation) {
+  const handleCreateReport = ({
+    content,
+    tags,
+    image,
+  }: {
+    content: string;
+    tags: string[];
+    image: File | null;
+  }) => {
+    if (content && currentLocation) {
       const newReportData = {
         username: 'Current User',
-        content: newReportContent,
+        content,
         timestamp: Math.floor(Date.now() / 1000),
-        image: imageFile ? URL.createObjectURL(imageFile) : null,
+        image: image ? URL.createObjectURL(image) : null,
         location: currentLocation,
-        tags: selectedTags,
+        tags,
       };
 
       fetch(`${API_BASE_URL}/report/`, {
@@ -49,17 +57,25 @@ export default function Home() {
         body: JSON.stringify(newReportData),
       })
         .then(res => res.json())
-        .then(data => {
-          console.log('Report submitted:', data);
+        .then(reportId => {
+          console.log('Report submitted:', reportId);
+          setSelectedReport({
+            id: reportId,
+            username: 'Current User',
+            reason: content,
+            image: image ? URL.createObjectURL(image) : null,
+            location: currentLocation,
+            tags,
+          });
           setNewReportContent('');
           setImageFile(null);
           setIsFormOpen(false);
           setSelectedTags([]);
+          setActiveTab('details');
         })
         .catch(error => console.error('Error submitting report:', error));
     }
   };
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       position => {
