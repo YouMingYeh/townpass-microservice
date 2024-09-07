@@ -124,7 +124,7 @@ const MapComponent = ({
           <Marker
             position={currentLocation}
             icon={{
-              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+              url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
             }}
           />
         )}
@@ -211,7 +211,7 @@ export default function Home() {
       },
       body: JSON.stringify(newCommentData),
     })
-      .then(res => res.text())
+      .then(res => res.json())
       .then(data => {
         console.log('Comment submitted:', data);
         setNewComment('');
@@ -241,7 +241,7 @@ export default function Home() {
         },
         body: JSON.stringify(newReportData),
       })
-        .then(res => res.text())
+        .then(res => res.json())
         .then(data => {
           console.log('Report submitted:', data);
           setNewReportContent('');
@@ -270,8 +270,10 @@ export default function Home() {
     );
   }, []);
   useEffect(() => {
+    if(!currentLocation?.lat || !currentLocation?.lng) return;
+
     fetch(
-      `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation?.lat}&longitude=${currentLocation?.lng}`,
+      `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation.lat}&longitude=${currentLocation.lng}`,
     )
       .then(
         res => res.json() as Promise<{ report: Report; distance: number }[]>,

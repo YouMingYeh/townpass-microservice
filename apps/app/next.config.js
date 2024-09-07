@@ -4,6 +4,7 @@ const getEnv = key => {
   return value;
 };
 
+// disable for now
 const withPWA = require('next-pwa')({
   dest: 'public', // Destination directory for the PWA files
   disable: process.env.NODE_ENV === 'development', // Disable PWA in development
@@ -37,4 +38,4 @@ const config = {
 };
 
 // TODO: refactor to use the exported envs. Used now as a check
-module.exports = withPWA(config);
+module.exports = config
