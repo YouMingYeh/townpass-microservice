@@ -128,7 +128,7 @@ export default function Home() {
     if (!currentLocation?.lat || !currentLocation?.lng) return;
 
     fetch(
-      `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation.lat}&longitude=${currentLocation.lng}`,
+      `${API_BASE_URL}/report/search_nearby?latitude=${currentLocation.lat}&longitude=${currentLocation.lng}/`,
     )
       .then(
         res => res.json() as Promise<{ report: Report; distance: number }[]>,

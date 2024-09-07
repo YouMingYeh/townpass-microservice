@@ -21,10 +21,13 @@ const tagsList = [
   '其他',
 ];
 
+const API_BASE_URL = 'https://api-gateway-978568328496.asia-east1.run.app';
+
 export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
   const [newReportContent, setNewReportContent] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const toggleTag = (tag: string) =>
     setSelectedTags(prevTags =>
@@ -32,6 +35,7 @@ export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
         ? prevTags.filter(t => t !== tag)
         : [...prevTags, tag],
     );
+
   const resetForm = () => {
     setNewReportContent('');
     setSelectedTags([]);
@@ -39,15 +43,48 @@ export const ReportForm = ({ isOpen, setIsOpen, handleCreateReport }: any) => {
     setIsOpen(false);
   };
 
-  const handleSubmit = () => {
-    handleCreateReport({
-      content: newReportContent,
-      tags: selectedTags,
-      image: imageFile,
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+
+      let imageUrl = '';
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+      handleCreateReport({
+        content: newReportContent,
+        tags: selectedTags,
+        image: imageUrl,
+      });
+
+      setNewReportContent('');
+      setSelectedTags([]);
+      setImageFile(null);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error submitting report:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_BASE_URL}/image/upload/`, {
+      method: 'POST',
+      body: formData,
     });
 
-    resetForm();
+    if (!response.ok) {
+      throw new Error('Image upload failed');
+    }
+
+    const imageUrl = await response.json();
+    return imageUrl;
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent style={{ maxWidth: '400px', padding: '20px' }}>
