@@ -51,15 +51,10 @@ export const ReportForm = ({
   const handleSubmit = async () => {
     try {
       setLoading(true);
-
-      let imageUrl = '';
-      if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
-      }
       handleCreateReport({
         content: newReportContent,
         tags: selectedTags,
-        image: imageUrl,
+        image: imageFile,
       });
 
       setNewReportContent('');
