@@ -299,7 +299,6 @@ export default function Home() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Forwarded-Proto': 'https',
       },
       body: JSON.stringify(newCommentData),
     })
@@ -327,7 +326,6 @@ export default function Home() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Forwarded-Proto': 'https',
         },
         body: JSON.stringify(newReportData),
       })
