@@ -12,9 +12,9 @@ const inter = Roboto({ weight: ['400', '700'], subsets: ['latin'] });
 
 // TODO: update the site metadata
 export const metadata: Metadata = {
-  title: 'TownPass 城市通微服務',
+  title: '市民互助',
   description:
-    '臺北市政府資訊局為持續推動臺北市成為服務型政府，並推廣主辦單位開源及資料開放政策，特以「台北通」為經驗，運用開放原始碼方式，舉辦「2024臺北程式設計節城市通微服務大黑客松」，盼讓數據驅動生活，實踐更好的使用體驗、介面設計，優化市府的服務。',
+    '市民互助是台北程式通通微服務的一部分，這是一個開源的項目，旨在幫助市民藉助社區的力量互相幫助，即時解決問題。',
   keywords: [
     '臺北秋季程式設計節',
     '黑客松',
@@ -23,21 +23,28 @@ export const metadata: Metadata = {
     '市政服務',
     '台北通',
     '競賽',
+    '開源',
+    '資料開放',
+    '數據驅動生活',
+    '使用體驗',
+    '介面設計',
+    '市府服務',
+    '市民互助',
   ],
   metadataBase: new URL('https://townpass-microservice.vercel.app'),
   openGraph: {
-    title: 'TownPass 城市通微服務',
+    title: '市民互助',
     description:
-      'TownPass 城市通微服務是臺北市政府資訊局為持續推動臺北市成為服務型政府，並推廣主辦單位開源及資料開放政策，特以「台北通」為經驗，運用開放原始碼方式，舉辦「2024臺北程式設計節城市通微服務大黑客松」，盼讓數據驅動生活，實踐更好的使用體驗、介面設計，優化市府的服務。',
+      '市民互助是台北程式通通微服務的一部分，這是一個開源的項目，旨在幫助市民藉助社區的力量互相幫助，即時解決問題。',
     type: 'website',
     url: 'https://townpass-microservice.vercel.app',
-    siteName: 'TownPass 城市通微服務',
+    siteName: '市民互助',
     images: [
       {
         url: 'https://townpass-microservice.vercel.app/icon512_rounded.png',
         width: 1200,
         height: 630,
-        alt: 'TownPass 城市通微服務',
+        alt: '市民互助',
       },
     ],
   },
@@ -46,7 +53,7 @@ export const metadata: Metadata = {
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
   },
-  applicationName: 'TownPass 城市通微服務',
+  applicationName: '市民互助',
   appleWebApp: true,
 };
 
