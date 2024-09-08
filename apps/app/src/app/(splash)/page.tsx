@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger, toast } from 'ui';
+import { useState, useEffect, Suspense } from 'react';
+import { Icons, Tabs, TabsContent, TabsList, TabsTrigger, toast } from 'ui';
 import { MapComponent } from '../../components/MapComponent';
 import { ReportDetails } from '../../components/ReportDetails';
 import { ReportForm } from '../../components/ReportForm';
@@ -275,51 +275,55 @@ export default function Home() {
       </TabsList>
 
       <TabsContent value='map'>
-        <div style={{ height: '100vh', width: '100%' }}>
-          {currentLocation && (
-            <MapComponent
-              onSelectReport={handleSelectReport}
-              reports={nearbyReports}
-              currentLocation={currentLocation}
-              setCurrentLocation={setCurrentLocation}
-            />
-          )}
-        </div>
+        <Suspense fallback={<Icons.Spinner className='animate-spin'></Icons.Spinner>}>
+          <div style={{ height: '100vh', width: '100%' }}>
+            {currentLocation && (
+              <MapComponent
+                onSelectReport={handleSelectReport}
+                reports={nearbyReports}
+                currentLocation={currentLocation}
+                setCurrentLocation={setCurrentLocation}
+              />
+            )}
+          </div>
+        </Suspense>
       </TabsContent>
 
       <TabsContent value='details' className='h-[95vh] overflow-auto'>
-        {selectedReport ? (
-          <ReportDetails
-            selectedReport={selectedReport}
-            comments={comments}
-            newComment={newComment}
-            setNewComment={setNewComment}
-            handleCommentSubmit={handleCommentSubmit}
-            reports={nearbyReports}
-            setSelectReport={setSelectedReport}
-          />
-        ) : (
-          <div style={{ marginTop: '40px' }} className='p-4 overflow-auto'>
-            <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
-            <div className='mt-4 flex flex-1 flex-col gap-4'>
-              {nearbyReports.slice(0, 10).map((report, index) => (
-                <div
-                  key={report.report_id}
-                  className='cursor-pointer border border-border rounded shadow p-4'
-                  onClick={() => {
-                    setSelectedReport(report);
-                  }}
-                >
-                  <div>
-                    <p className='text-2xl'>{report.emoji || '🙂'}</p>
-                    <h2 className='text-xl font-bold'>{report.username}</h2>
-                    <p>{report.content}</p>
+        <Suspense fallback={<Icons.Spinner className='animate-spin'></Icons.Spinner>}>
+          {selectedReport ? (
+            <ReportDetails
+              selectedReport={selectedReport}
+              comments={comments}
+              newComment={newComment}
+              setNewComment={setNewComment}
+              handleCommentSubmit={handleCommentSubmit}
+              reports={nearbyReports}
+              setSelectReport={setSelectedReport}
+            />
+          ) : (
+            <div style={{ marginTop: '40px' }} className='overflow-auto p-4'>
+              <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
+              <div className='mt-4 flex flex-1 flex-col gap-4'>
+                {nearbyReports.slice(0, 10).map((report, index) => (
+                  <div
+                    key={report.report_id}
+                    className='border-border cursor-pointer rounded border p-4 shadow'
+                    onClick={() => {
+                      setSelectedReport(report);
+                    }}
+                  >
+                    <div>
+                      <p className='text-2xl'>{report.emoji || '🙂'}</p>
+                      <h2 className='text-xl font-bold'>{report.username}</h2>
+                      <p>{report.content}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </Suspense>
       </TabsContent>
       <button
         style={{
@@ -343,8 +347,10 @@ export default function Home() {
         setIsOpen={setIsFormOpen}
         handleCreateReport={handleCreateReport}
       />
-      {/* @ts-ignore. */}
-      <Notifications handleSelectReport={handleSelectReport}></Notifications>
+
+      <Suspense>
+        <Notifications handleSelectReport={handleSelectReport}></Notifications>
+      </Suspense>
     </Tabs>
   );
 }

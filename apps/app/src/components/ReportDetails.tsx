@@ -1,6 +1,6 @@
 import { Report, Comment } from '../app/type';
 import { Badge, Textarea, Input, Button, Separator } from 'ui';
-import { useState, useRef } from 'react';
+import { useState, useRef, Suspense } from 'react';
 
 interface ReportDetailsProps {
   selectedReport: Report;
@@ -32,7 +32,7 @@ export const ReportDetails = ({
   console.log('selectedReport:', selectedReport);
   return (
     <div style={{ padding: '20px' }}>
-      <p className='text-2xl'>{selectedReport.emoji}</p>
+      <p className='text-2xl' ref={portfolioRef}>{selectedReport.emoji}</p>
       <h2 className='text-2xl font-bold'>報告詳細資訊</h2>
 
       <p>
@@ -112,26 +112,29 @@ export const ReportDetails = ({
           <Button onClick={handleCommentSubmit}>送出留言</Button>
         </div>
       </div>
-      <div style={{ marginTop: '40px' }} className='p-4 overflow-auto'>
-            <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
-            <div className='mt-4 flex flex-1 flex-col gap-4'>
-              {reports.slice(0, 10).map((report, index) => (
-                <div
-                  key={report.report_id}
-                  className='cursor-pointer border border-border rounded shadow p-4'
-                  onClick={() => {
-                    setSelectReport(report);
-                  }}
-                >
-                  <div>
-                    <p className='text-2xl'>{report.emoji || '🙂'}</p>
-                    <h2 className='text-xl font-bold'>{report.username}</h2>
-                    <p>{report.content}</p>
-                  </div>
+      <Suspense>
+        <div style={{ marginTop: '40px' }} className='overflow-auto p-4'>
+          <h2 className='text-2xl font-bold'>附近發生了什麼🤔</h2>
+          <div className='mt-4 flex flex-1 flex-col gap-4'>
+            {reports.slice(0, 10).map((report, index) => (
+              <div
+                key={report.report_id}
+                className='border-border cursor-pointer rounded border p-4 shadow'
+                onClick={() => {
+                  scrollToPortfolio();
+                  setSelectReport(report);
+                }}
+              >
+                <div>
+                  <p className='text-2xl'>{report.emoji || '🙂'}</p>
+                  <h2 className='text-xl font-bold'>{report.username}</h2>
+                  <p>{report.content}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
+        </div>
+      </Suspense>
     </div>
   );
 };

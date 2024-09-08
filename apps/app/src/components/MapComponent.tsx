@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import {
   GoogleMap,
   useJsApiLoader,
@@ -90,59 +90,61 @@ export const MapComponent = ({
 
   return (
     <>
-      <Drawer>
-        <DrawerTrigger
-          style={{
-            position: 'absolute',
-            top: '60px',
-            right: '10px',
-            zIndex: 1000,
-          }}
-        >
-          <div className={buttonVariants()}>
-            <Icons.SlidersHorizontal />
-          </div>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>篩選條件</DrawerTitle>
-          </DrawerHeader>
-          <div
+      <Suspense>
+        <Drawer>
+          <DrawerTrigger
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
-              justifyContent: 'center',
-              maxWidth: '600px',
-              margin: '0 auto',
+              position: 'absolute',
+              top: '60px',
+              right: '10px',
+              zIndex: 1000,
             }}
           >
-            {tagsList.map(tag => (
-              <Button
-                key={tag}
-                onClick={() => toggleTag(tag)}
-                style={{
-                  backgroundColor: selectedTags.includes(tag)
-                    ? '#5AB4C5'
-                    : '#e5e5e5',
-                  color: selectedTags.includes(tag) ? '#fff' : '#000',
-                  borderRadius: '5px',
-                  padding: '5px 10px',
-                  flex: '0 0 calc(25% - 10px)',
-                  textAlign: 'center',
-                }}
-              >
-                {tag}
-              </Button>
-            ))}
-          </div>
-          <DrawerFooter>
-            <DrawerClose>
-              <Button variant='outline'>關閉</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+            <div className={buttonVariants()}>
+              <Icons.SlidersHorizontal />
+            </div>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>篩選條件</DrawerTitle>
+            </DrawerHeader>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '10px',
+                justifyContent: 'center',
+                maxWidth: '600px',
+                margin: '0 auto',
+              }}
+            >
+              {tagsList.map(tag => (
+                <Button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  style={{
+                    backgroundColor: selectedTags.includes(tag)
+                      ? '#5AB4C5'
+                      : '#e5e5e5',
+                    color: selectedTags.includes(tag) ? '#fff' : '#000',
+                    borderRadius: '5px',
+                    padding: '5px 10px',
+                    flex: '0 0 calc(25% - 10px)',
+                    textAlign: 'center',
+                  }}
+                >
+                  {tag}
+                </Button>
+              ))}
+            </div>
+            <DrawerFooter>
+              <DrawerClose>
+                <Button variant='outline'>關閉</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </Suspense>
 
       <Button
         size='icon'

@@ -3,7 +3,7 @@ import { useToast } from "ui";
 
 
 interface NotificationsProps {
-    handleSelectReport: (report: Report) => void;
+    handleSelectReport: (report: any) => void;
 }
 
 export const Notifications = ({ handleSelectReport }: NotificationsProps) => {
