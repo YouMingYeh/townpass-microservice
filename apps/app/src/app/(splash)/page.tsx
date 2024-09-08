@@ -343,7 +343,8 @@ export default function Home() {
         setIsOpen={setIsFormOpen}
         handleCreateReport={handleCreateReport}
       />
-      <Notifications></Notifications>
+      {/* @ts-ignore. */}
+      <Notifications handleSelectReport={handleSelectReport}></Notifications>
     </Tabs>
   );
 }

@@ -71,6 +71,7 @@ export const ReportDetails = ({
               paddingLeft: '8px',
               paddingRight: '8px',
               marginRight: '6px',
+              marginBottom: '6px',
             }}
           >
             {tag}

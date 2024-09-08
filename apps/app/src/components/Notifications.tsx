@@ -1,7 +1,12 @@
 import { useEffect } from "react";
 import { useToast } from "ui";
 
-export const Notifications = () => {
+
+interface NotificationsProps {
+    handleSelectReport: (report: Report) => void;
+}
+
+export const Notifications = ({ handleSelectReport }: NotificationsProps) => {
     const { toast } = useToast();
 
     useEffect(() => {
@@ -13,10 +18,17 @@ export const Notifications = () => {
         socket.addEventListener("message", (event) => {
             // Handle incoming WebSocket messages
             const message: string = event.data;
+            const { message: title, data } = JSON.parse(message);
+            const report = JSON.parse(data);
+            const content = report.content;
             toast({
-                title: '收到新通知',
-                description: message,
+                title: title,
+                description: content.length > 100 ? content.slice(0, 100) + '...' : content,
+                onClick: () => {
+                    handleSelectReport(report);
+                }
             });
+            console.log(content)
         });
 
         socket.addEventListener("close", () => {
