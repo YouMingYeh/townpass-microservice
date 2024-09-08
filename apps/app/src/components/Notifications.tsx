@@ -5,17 +5,18 @@ export const Notifications = () => {
     const { toast } = useToast();
 
     useEffect(() => {
-        const socket = new WebSocket("wss://your-websocket-url");
+        const socket = new WebSocket("wss://api-gateway-978568328496.asia-east1.run.app/notification/push/namwoam");
 
         socket.addEventListener("open", () => {
-            // WebSocket connection is established
-            // toast("WebSocket connection established");
         });
 
         socket.addEventListener("message", (event) => {
             // Handle incoming WebSocket messages
-            const message = event.data;
-            // toast(`Received message: ${message}`);
+            const message: string = event.data;
+            toast({
+                title: '收到新通知',
+                description: message,
+            });
         });
 
         socket.addEventListener("close", () => {
